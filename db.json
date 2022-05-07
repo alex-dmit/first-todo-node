@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "text": "Learn JS",
+    "done": true
+  },
+  {
+    "id": 3,
+    "text": "Learn React",
+    "done": true
+  },
+  {
+    "id": 4,
+    "text": "Learn Prisma",
+    "done": false
+  },
+  {
+    "id": 5,
+    "text": "Learn NodeJS",
+    "done": false
+  }
+]
