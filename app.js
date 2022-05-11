@@ -1,7 +1,11 @@
 const express = require('express')
 const fs = require('fs')
 const app = express()
-let db = require('./db.json')
+// let db = require('./db.json')
+
+const PrismaClient = require('@prisma/client').PrismaClient
+
+const db = new PrismaClient()
 
 // API - application programming interface
 
@@ -13,32 +17,43 @@ app.use(express.json())
 // RESTfull API
 // CRUD (Create, Read, Update, Delete)
 
-app.get('/api/tasks', function (req, res) {
-    res.send(db)
+app.get('/api/tasks', async function (req, res) {
+    const allTasks = await db.task.findMany()
+    res.send(allTasks)
 })
 
-app.post('/api/tasks', function (req, res) {
+app.post('/api/tasks', async function (req, res) {
     const task = req.body
-    db.push(task)
-    saveDb()
-    res.send(db)
-})
-
-app.delete('/api/tasks/:taskid', function (req, res) {
-    const id = req.params.taskid
-    db = db.filter((task) => {
-        return task.id !== +id
+    const taskFromDb = await db.task.create({
+        data: task
     })
-    saveDb()
-    res.send(db)
+    res.send(taskFromDb)
 })
 
-app.patch('/api/tasks/:taskid', function (req, res) {
+app.delete('/api/tasks/:taskid', async function (req, res) {
+    const id = req.params.taskid
+    const task = await db.task.delete({
+        where: {
+            id: +id
+        }
+    })
+    res.send(task)
+})
+
+// ############## DZ ##############
+app.get('/api/tasks:id', async function (req, res) {
+    const id = req.params.taskid
+    // ...
+})
+
+app.patch('/api/tasks/:taskid', async function (req, res) {
     const editedTask = req.body
     const id = req.params.taskid
     // ...
-    res.send(db)
+    // res.send(db)
 })
+// ############## DZ ##############
+
 
 app.listen(3000)
 
