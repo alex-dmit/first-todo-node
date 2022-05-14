@@ -30,7 +30,9 @@ app.post('/api/tasks', async function (req, res) {
     res.send(taskFromDb)
 })
 
-app.delete('/api/tasks/:taskid', async function (req, res) {
+app.delete('/api/tasks/:param1/:param2/:param3', async function (req, res) {
+    req.params.param1
+    req.params.param3
     const id = req.params.taskid
     const task = await db.task.delete({
         where: {
@@ -40,25 +42,26 @@ app.delete('/api/tasks/:taskid', async function (req, res) {
     res.send(task)
 })
 
-// ############## DZ ##############
-app.get('/api/tasks:id', async function (req, res) {
+app.get('/api/tasks/:taskid', async function (req, res) {
     const id = req.params.taskid
-    // ...
+    const task = await db.task.findUnique({
+        where: {
+            id: +id
+        }
+    })
+    res.send(task)
 })
 
 app.patch('/api/tasks/:taskid', async function (req, res) {
     const editedTask = req.body
     const id = req.params.taskid
-    // ...
-    // res.send(db)
+    const taskFromDb = await db.task.update({
+        where: {
+            id: +id
+        },
+        data: editedTask
+    })
+    res.send(taskFromDb)
 })
-// ############## DZ ##############
-
 
 app.listen(3000)
-
-function saveDb() {
-    fs.writeFileSync('./db.json',
-        JSON.stringify(db, null, 2),
-        { encoding: 'utf8' })
-}
